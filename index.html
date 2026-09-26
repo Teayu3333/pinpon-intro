@@ -553,13 +553,7 @@ const Player = (() => {
           onStateChange: e => {
             const P = YT.PlayerState;
             base = {t: yt.getCurrentTime(), at: performance.now(), on: e.data === P.PLAYING};
-            // Preload trick: play muted until the first frame, then park paused at the start.
-            if (wait && e.data === P.PLAYING) {
-              const w = wait; wait = null;
-              yt.pauseVideo(); yt.seekTo(w.start, true);
-              setTimeout(() => { yt.unMute(); yt.setVolume(vol * 100); }, 250);
-              w.res();
-            }
+            if (wait && e.data === P.PLAYING) parked();
             emit();
           },
           onError: e => {
@@ -569,6 +563,15 @@ const Player = (() => {
         },
       });
     }));
+  }
+  // Preload trick: play muted until the song itself starts (ads run first on some videos), then park paused at the start.
+  function parked() {
+    const w = wait;
+    if (!w) return;
+    wait = null;
+    yt.pauseVideo(); yt.seekTo(w.start, true);
+    setTimeout(() => { yt.unMute(); yt.setVolume(vol * 100); }, 250);
+    w.res();
   }
   function stop() {
     want = false; clearTimeout(blockT);
@@ -588,7 +591,9 @@ const Player = (() => {
         const w = wait = {res, rej, start: tr.start || 0};
         yt.mute();
         yt.loadVideoById({videoId: tr.vid, startSeconds: tr.start || 0});
-        setTimeout(() => { if (wait === w) { wait = null; yt.pauseVideo(); yt.unMute(); yt.setVolume(vol * 100); res(); } }, 12000);
+        // During an ad the state stays -1, so also poll in case the PLAYING event is missed.
+        const iv = setInterval(() => { if (wait !== w) clearInterval(iv); else if (yt.getPlayerState?.() === YT.PlayerState.PLAYING) parked(); }, 300);
+        setTimeout(() => { if (wait === w) parked(); }, 60000);
       });
     }
     kind = 'aud';
@@ -862,7 +867,7 @@ $('#fAns').addEventListener('submit', e => {
 function pStatus() {
   if (!S) return conn?.open ? '部屋に入りました' : '部屋に接続しています…';
   if (!S.track) return '出題者が曲を選んでいます';
-  if (load === 'loading') return filePct != null ? `曲を受け取っています… ${filePct}%` : '曲を読み込んでいます…';
+  if (load === 'loading') return filePct != null ? `曲を受け取っています… ${filePct}%` : S.track.kind === 'yt' ? '曲を読み込んでいます…（YouTube の広告が入ると、終わるまで待ちます）' : '曲を読み込んでいます…';
   if (load === 'error') return `読み込めませんでした：${loadErr}`;
   if (S.reveal) return '答え合わせ';
   const nm = pid => S.players[pid]?.name || '???';
@@ -1218,7 +1223,7 @@ function renderTracks() {
 function hStatus(readyN, online) {
   if (!G.track) return tracks.length ? '曲リストの「出題」か「次の問題」で始めます' : 'まず曲リストに曲を追加してください';
   if (G.err) return '曲を読み込めませんでした';
-  if (!G.loaded) return '曲を読み込んでいます…';
+  if (!G.loaded) return G.track.kind === 'yt' ? '曲を読み込んでいます…（YouTube の広告が入ると、終わるまで待ちます）' : '曲を読み込んでいます…';
   if (G.reveal) return '答えを表示しています';
   if (G.mode === 'buzz') {
     if (G.done) return '正解が出ました';
