@@ -1,0 +1,1371 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ぴんぽんイントロ</title>
+<meta name="description" content="YouTube や MP3 の曲で遊ぶイントロ早押しクイズ。リンクを開いて名前を入れるだけで参加できます。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ぴんぽんイントロ">
+<meta property="og:description" content="イントロ早押しクイズ。リンクを開いて名前を入れるだけで参加できます。">
+<meta name="theme-color" content="#E0322B">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='18' r='13' fill='%232A3052'/%3E%3Ccircle cx='16' cy='15' r='10' fill='%23E0322B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#E9EDF6;--panel:#FFFFFF;--panel-2:#F1F3FA;--ink:#141A38;--muted:#586184;--line:#D4DAEA;
+  --stage:#17225C;--stage-2:#0E1745;--stage-line:#26347E;--stage-ink:#F3F5FF;
+  --led:#FFB21E;--led-ink:#241800;
+  --maru:#E0322B;--maru-deep:#9E1B16;--batsu:#1D66E0;--ok:#1C9A58;
+  --ring:#2A3052;--ring-edge:#8E96B6;--base:#1B2038;
+  --focus:#1D66E0;
+  --shadow:0 1px 0 rgb(20 26 56 / .05),0 14px 30px -20px rgb(20 26 56 / .5);
+  --f-display:"Dela Gothic One","Hiragino Kaku Gothic StdN","Yu Gothic",sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  --f-led:"DotGothic16",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0B0F21;--panel:#141A34;--panel-2:#1B2244;--ink:#E8ECFA;--muted:#9AA3C6;--line:#2A3260;
+  --stage:#111A50;--stage-2:#0A1136;--stage-line:#2B3886;
+  --maru:#F0453D;--maru-deep:#A71E18;--batsu:#4A8BFF;--ok:#35C47A;
+  --ring:#2E3666;--ring-edge:#5C6699;--base:#04060E;
+  --focus:#83B2FF;
+  --shadow:0 1px 0 rgb(0 0 0 / .3),0 16px 32px -20px rgb(0 0 0 / .9);
+  color-scheme:dark;
+}}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:15px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{touch-action:manipulation}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+.top{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;max-width:1240px;margin:0 auto;padding:12px 16px}
+.brand{display:inline-flex;align-items:center;gap:9px;font:19px/1 var(--f-display);color:var(--ink);text-decoration:none;letter-spacing:.02em}
+.brand i{width:15px;height:15px;border-radius:50%;background:var(--maru);box-shadow:0 0 0 3px var(--ring),0 3px 0 3px var(--base)}
+.spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;white-space:nowrap}
+.chip b{font:15px/1 var(--f-led);letter-spacing:.08em}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--led)}.dot.bad{background:var(--maru)}
+.net{white-space:normal}
+
+main{max-width:1240px;margin:0 auto;padding:4px 16px 56px}
+
+/* common */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.panel h3{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.panel h3 .btn{margin-left:auto}
+.count{font:14px/1 var(--f-led);color:var(--ink);letter-spacing:.04em}
+.eyebrow{margin:0;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--maru)}
+.note,.hint{margin:0;font-size:13px;color:var(--muted)}
+.lbl{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.row{display:flex;align-items:center;gap:8px}
+.row.wrap{flex-wrap:wrap}
+.row>input{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 15px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-weight:700;cursor:pointer;white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover:not(:disabled){border-color:var(--muted)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.btn.maru{background:var(--maru);border-color:var(--maru);color:#fff}
+.btn.batsu{background:var(--batsu);border-color:var(--batsu);color:#fff}
+.btn.big{min-height:54px;font-size:18px;padding:10px 20px;flex:1}
+.btn.small{min-height:34px;padding:4px 11px;font-size:13px}
+.btn.tiny{min-height:28px;padding:2px 9px;font-size:12px;border-radius:7px}
+.btn.ghost{background:transparent}
+input:not([type=range]):not([type=checkbox]):not([type=file]){width:100%;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:16px}
+input:disabled{opacity:.55}
+input[type=range],input[type=checkbox]{accent-color:var(--maru)}
+input[type=range]{width:100%;min-width:0}
+.check{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+.check input{width:18px;height:18px;margin:0}
+.vol{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px 18px}
+.vol label{display:grid;grid-template-columns:4.2em 1fr;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted)}
+
+/* stage */
+.stage{display:grid;gap:12px;padding:14px;border-radius:16px;background:linear-gradient(180deg,var(--stage),var(--stage-2));border:1px solid var(--stage-line);color:var(--stage-ink);box-shadow:var(--shadow)}
+.st-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 12px}
+.plate{font:21px/1 var(--f-display);padding:8px 12px 7px;border-radius:6px;background:var(--led);color:var(--led-ink);letter-spacing:.04em;white-space:nowrap}
+.st-status{min-width:0;font-weight:700;overflow-wrap:anywhere}
+.clock{font:28px/1 var(--f-led);color:var(--led);font-variant-numeric:tabular-nums;white-space:nowrap}
+.clock small{font-size:14px;margin-left:3px;opacity:.8}
+.screen{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:10px;overflow:hidden;background:#050818}
+#ytmount{position:absolute;inset:0;width:100%;height:100%;border:0}
+.cover{position:absolute;inset:0;background:radial-gradient(120% 85% at 50% 115%,rgb(255 178 30 / .22),transparent 62%),linear-gradient(#101B55,#08103A)}
+.cover-q{position:absolute;left:0;right:0;top:13%;text-align:center;font:clamp(40px,10vw,92px)/1 var(--f-display);color:#fff;text-shadow:0 4px 0 rgb(0 0 0 / .3)}
+.eq{position:absolute;left:9%;right:9%;bottom:13%;height:36%;display:flex;align-items:flex-end;justify-content:center;gap:clamp(3px,1vw,7px)}
+.eq i{flex:1;max-width:15px;height:100%;border-radius:3px 3px 0 0;background:linear-gradient(to top,var(--led),#FFE2A0);transform-origin:50% 100%;transform:scaleY(.07)}
+.stage.playing .eq i{animation:eq var(--d,.86s) ease-in-out var(--dl,0s) infinite alternate}
+.eq i:nth-child(3n){--d:.62s;--h:.7}.eq i:nth-child(3n+1){--d:.8s;--h:.95}.eq i:nth-child(4n){--dl:-.35s;--h:.55}.eq i:nth-child(5n+2){--dl:-.6s;--d:.71s}.eq i:nth-child(7n){--d:1.04s;--h:.8}
+@keyframes eq{from{transform:scaleY(.08)}to{transform:scaleY(var(--h,.88))}}
+.unlock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:calc(100% - 24px);padding:10px 16px;border:0;border-radius:10px;background:var(--led);color:var(--led-ink);font-weight:700;cursor:pointer;white-space:normal}
+.stage.tapthru .cover{pointer-events:none;opacity:.35}
+.stage.tapthru .unlock{top:10px;transform:translateX(-50%);pointer-events:none}
+.answer{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:0;padding:10px 14px;border-radius:9px;background:var(--led);color:var(--led-ink)}
+.answer span{font-size:12px;font-weight:700;letter-spacing:.1em}
+.answer b{font:clamp(18px,4vw,24px)/1.3 var(--f-display);overflow-wrap:anywhere}
+
+/* buzzer */
+.buzzer{--s:min(56vw,216px);width:var(--s);height:var(--s);flex:none;border:0;border-radius:50%;cursor:pointer;color:#fff;
+  font:clamp(24px,6.4vw,32px)/1.1 var(--f-display);letter-spacing:.06em;text-shadow:0 2px 0 rgb(90 0 0 / .35);
+  background:radial-gradient(circle at 50% 30%,#FFA197 0 5%,#FF5A4E 21%,var(--maru) 46%,var(--maru-deep) 80%);
+  box-shadow:inset 0 -12px 22px rgb(0 0 0 / .28),inset 0 6px 10px rgb(255 255 255 / .25),0 0 0 12px var(--ring),0 0 0 14px var(--ring-edge),0 16px 0 10px var(--base),0 28px 30px 8px rgb(0 0 0 / .22);
+  margin:14px 0 30px;transition:transform .06s,box-shadow .06s,filter .25s;-webkit-tap-highlight-color:transparent;user-select:none}
+.buzzer:active:not(:disabled),.buzzer.down,.buzzer.pressed{transform:translateY(8px);box-shadow:inset 0 -8px 18px rgb(0 0 0 / .3),inset 0 5px 8px rgb(255 255 255 / .2),0 0 0 12px var(--ring),0 0 0 14px var(--ring-edge),0 8px 0 10px var(--base),0 16px 22px 6px rgb(0 0 0 / .22)}
+.buzzer:disabled{cursor:default;filter:saturate(.7) brightness(.58)}
+.buzzer.pressed:disabled{filter:saturate(.85) brightness(.8)}
+.buzzer.win:disabled{filter:none;animation:glow .9s ease-in-out infinite alternate}
+.buzzer.out:disabled{filter:grayscale(1) brightness(.7)}
+@keyframes glow{to{box-shadow:inset 0 -8px 18px rgb(0 0 0 / .3),0 0 0 12px var(--ring),0 0 0 14px var(--ring-edge),0 8px 0 10px var(--base),0 0 46px 22px rgb(255 178 30 / .6)}}
+
+/* flash */
+.flash{position:fixed;inset:0;z-index:40;display:grid;place-items:center;align-content:center;gap:10px;padding:16px;pointer-events:none;background:rgb(6 9 26 / .6)}
+.mk{display:none;width:min(52vw,270px);height:auto;fill:none;stroke-linecap:round}
+.mk .edge{stroke:#fff;stroke-width:24}
+.mk .ink{stroke-width:15}
+.mk-pin .ink{stroke:var(--maru)}.mk-bubu .ink{stroke:var(--batsu)}
+.flash.pin .mk-pin,.flash.bubu .mk-bubu{display:block}
+.fl-text{display:grid;justify-items:center;text-align:center;color:#fff;text-shadow:0 3px 0 rgb(0 0 0 / .4)}
+.fl-text span{font-size:clamp(15px,3.6vw,20px);font-weight:700;letter-spacing:.12em}
+.fl-text b{max-width:90vw;font:clamp(30px,8vw,62px)/1.15 var(--f-display);overflow-wrap:anywhere}
+.flash.buzz .fl-text{padding:12px 26px 14px;border-radius:12px;background:var(--led);color:var(--led-ink);text-shadow:none}
+.flash.show .mk,.flash.show .fl-text{animation:pop .38s cubic-bezier(.2,1.5,.4,1) both}
+.flash.show .fl-text{animation-delay:.06s}
+@keyframes pop{from{transform:scale(.55);opacity:0}to{transform:none;opacity:1}}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;max-width:calc(100% - 32px);padding:10px 16px;border-radius:10px;background:var(--ink);color:var(--panel);font-weight:700;font-size:14px;box-shadow:var(--shadow)}
+
+/* landing */
+.landing{display:grid;gap:30px;padding-top:20px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px 40px}
+.hero-title{margin:10px 0 16px;font:clamp(46px,9.5vw,96px)/1.02 var(--f-display);letter-spacing:.01em}
+.hero-title span{color:var(--maru)}
+.lede{max-width:34em;margin:0;font-size:16px;color:var(--muted)}
+.hero-buzz{display:grid;justify-items:center;gap:4px;padding-right:12px}
+.hero-buzz .buzzer{--s:min(44vw,190px);font-size:clamp(18px,4.6vw,24px)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.choice{display:grid;align-content:start;gap:10px;padding:20px}
+.choice h2{font:22px/1.2 var(--f-display)}
+.choice p{margin:0;color:var(--muted)}
+.choice label{font-size:13px;font-weight:700;color:var(--muted)}
+#inCode{font:20px/1 var(--f-led);letter-spacing:.2em;text-transform:uppercase}
+.howto{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px 22px}
+.howto li{counter-increment:s;display:grid;gap:2px;padding-top:12px;border-top:3px solid var(--ink);color:var(--muted);font-size:14px}
+.howto li::before{content:counter(s);font:26px/1 var(--f-led);color:var(--maru)}
+.howto b{color:var(--ink);font-size:16px}
+@media (max-width:640px){.hero{grid-template-columns:1fr}.hero-buzz{padding:0}}
+
+/* join */
+.join{display:grid;place-items:start center;padding-top:28px}
+.join-card{display:grid;gap:12px;width:min(100%,440px);padding:22px}
+.join-card h2{font:24px/1.25 var(--f-display)}
+.join-card label{font-size:13px;font-weight:700;color:var(--muted)}
+
+/* participant */
+.play{display:grid;gap:16px;max-width:640px;margin:0 auto}
+.console{display:grid;justify-items:center;min-height:120px}
+.buzz-wrap{display:grid;justify-items:center}
+.buzz-wrap .hint{min-height:1.65em;text-align:center}
+.retry{margin-top:10px}
+.ans{display:grid;gap:8px;width:100%;padding:16px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.ans label{font-size:13px;font-weight:700;color:var(--muted)}
+.ans .hint{min-height:1.65em}
+.rename{display:grid;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.rename label{font-size:13px;font-weight:700;color:var(--muted)}
+
+/* scores */
+.scores{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.scores li{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:8px 12px;border-radius:10px;background:var(--panel-2)}
+.scores li.me{box-shadow:inset 0 0 0 2px var(--focus)}
+.scores li.off{opacity:.55}
+.scores li.empty{display:block;color:var(--muted);font-size:14px}
+.rank{width:1.5em;font:15px/1 var(--f-led);color:var(--muted);text-align:right}
+.who{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px}
+.who .nm{font-weight:700;overflow-wrap:anywhere}
+.said{flex-basis:100%;font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.pt{font:27px/1 var(--f-led);font-variant-numeric:tabular-nums;min-width:2ch;text-align:right}
+.adj{display:flex;gap:4px}
+.tag{display:inline-block;padding:1px 7px;border-radius:5px;background:var(--line);color:var(--ink);font-size:11px;font-weight:700;line-height:1.6}
+.tag.maru{background:var(--maru);color:#fff}.tag.batsu{background:var(--batsu);color:#fff}
+.tag.hot{background:var(--led);color:var(--led-ink)}
+.tag.sec{background:transparent;padding:0;font:13px/1.6 var(--f-led);color:var(--muted)}
+.you{font-size:11px;font-weight:700;color:var(--focus)}
+
+/* host */
+.host{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:start;gap:16px}
+.col{display:grid;gap:16px;min-width:0}
+@media (max-width:980px){.host{grid-template-columns:minmax(0,1fr)}}
+.ctl{display:grid;gap:12px}
+.now{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.now b{font:20px/1.3 var(--f-display);overflow-wrap:anywhere;min-width:0}
+.ready{margin-left:auto;font:14px/1.4 var(--f-led);color:var(--muted);white-space:nowrap}
+.err{margin:0;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,var(--maru) 12%,var(--panel));color:var(--maru);font-size:13px;font-weight:700;overflow-wrap:anywhere}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:var(--panel-2);border:1px solid var(--line)}
+.seg button{padding:6px 13px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-weight:700;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--panel)}
+.opts{gap:10px 18px}
+.keys{margin:0;font-size:12px;color:var(--muted)}
+.keys kbd{display:inline-block;min-width:1.7em;padding:0 5px;margin-right:3px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;background:var(--panel-2);font:12px/1.5 var(--f-led);text-align:center}
+.judge .empty,.judge .waiting,.judge .done{margin:0;padding:14px;border-radius:10px;background:var(--panel-2);color:var(--muted);font-weight:700}
+.judge .done{color:var(--maru)}
+.answerer{display:grid;gap:12px;padding:14px;border-radius:12px;background:var(--panel-2);box-shadow:inset 0 0 0 2px var(--maru)}
+.answerer .who{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.answerer .who b{font:26px/1.2 var(--f-display);overflow-wrap:anywhere}
+.sec{font:15px/1.4 var(--f-led);color:var(--muted);white-space:nowrap}
+.jbtns{display:flex;gap:8px;flex-wrap:wrap}
+.blist,.alist{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+.blist li{display:grid;grid-template-columns:1.6em minmax(0,1fr) auto 3.4em;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:var(--panel-2)}
+.blist .ord{font:15px/1 var(--f-led);color:var(--muted)}
+.blist .nm{font-weight:700;overflow-wrap:anywhere}
+.blist .st{font-weight:700;text-align:right;font-size:13px}
+.st.maru{color:var(--maru)}.st.batsu{color:var(--batsu)}
+.alist li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 12px;padding:10px 12px;border-radius:10px;background:var(--panel-2)}
+.alist .a-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;font-size:13px;color:var(--muted)}
+.alist .a-head b{color:var(--ink)}
+.alist .a-text{grid-column:1;margin:0;font-size:18px;font-weight:700;overflow-wrap:anywhere}
+.alist .jbtns{grid-column:2;grid-row:1/span 2}
+.mark{font:22px/1 var(--f-display)}.mark.maru{color:var(--maru)}.mark.batsu{color:var(--batsu)}
+.sfx{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.sfx .lbl{margin-right:auto}
+.invite .link{margin:0 0 12px;padding:10px 12px;border-radius:9px;background:var(--panel-2);font-size:14px;overflow-wrap:anywhere}
+.invite code{font-family:ui-monospace,Consolas,monospace;user-select:all}
+.invite .note{margin-top:10px}
+.drop{position:relative;display:grid;place-items:center;margin-top:10px;padding:14px;border:2px dashed var(--line);border-radius:12px;color:var(--muted);text-align:center;font-weight:700;font-size:14px;cursor:pointer;transition:border-color .15s,background .15s}
+.drop small{font-weight:500}
+.drop input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.drop:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.drop.over,.drop:hover{border-color:var(--maru);color:var(--ink)}
+.tracks{list-style:none;margin:12px 0 0;padding:0 2px 0 0;display:grid;gap:6px;max-height:560px;overflow:auto;overscroll-behavior:contain}
+.tracks li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 10px;padding:8px 10px;border-radius:10px;background:var(--panel-2);border:2px solid transparent}
+.tracks li.cur{border-color:var(--maru)}
+.tracks li.empty{display:block;color:var(--muted);font-size:14px}
+.tracks input{padding:6px 9px!important;font-size:14px!important;border-radius:8px!important}
+.kind{min-width:3.4em;padding:5px 6px;border-radius:5px;background:var(--stage);color:var(--led);font:12px/1 var(--f-led);text-align:center}
+.tr-actions{display:flex;align-items:center;gap:6px}
+.tr-start{width:4.6em!important;text-align:center;font-variant-numeric:tabular-nums}
+.tr-sub{grid-column:2/-1;margin:0;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.tr-sub .warn{color:var(--maru);font-weight:700}
+li.done .tr-ans{color:var(--muted)}
+@media (max-width:520px){
+  .st-head{grid-template-columns:auto 1fr}.clock{justify-self:end}.st-status{grid-column:1/-1;grid-row:2}
+  .tracks li{grid-template-columns:auto minmax(0,1fr)}.tr-actions{grid-column:1/-1;justify-content:flex-end}.tr-sub{grid-column:1/-1}
+  .blist li{grid-template-columns:1.6em minmax(0,1fr) auto}.blist .st{grid-column:2/-1;text-align:left}
+}
+@media (pointer:coarse){.tracks input{font-size:16px!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./"><i aria-hidden="true"></i>ぴんぽんイントロ</a>
+  <span class="chip" id="roomChip" hidden>部屋 <b id="roomCode"></b></span>
+  <span class="chip net" id="net" hidden><span class="dot" id="netDot"></span><span id="netText"></span></span>
+  <span class="spacer"></span>
+  <span class="chip" id="meChip" hidden>あなた：<strong id="meName"></strong></span>
+</header>
+
+<main>
+  <section id="vLanding" class="landing" hidden>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Discord で遊ぶイントロ早押し</p>
+        <h1 class="hero-title">ぴんぽん<br><span>イントロ</span></h1>
+        <p class="lede">YouTube や MP3 の曲を流して、わかった人から早押し。出題者が部屋を作って招待リンクを Discord に貼れば、みんなはリンクを開いて名前を入れるだけで参加できます。</p>
+      </div>
+      <div class="hero-buzz">
+        <button class="buzzer" id="demoBuzz" type="button">押してみて</button>
+      </div>
+    </div>
+    <div class="choices">
+      <div class="panel choice">
+        <h2>出題する</h2>
+        <p>部屋を作って、流す曲を登録します。</p>
+        <div class="row wrap">
+          <button class="btn primary" id="btnCreate" type="button">部屋を作る</button>
+          <button class="btn" id="btnResume" type="button" hidden>部屋 <b></b> を再開</button>
+        </div>
+      </div>
+      <form class="panel choice" id="fCode">
+        <h2>参加する</h2>
+        <label for="inCode">部屋コード（6文字）</label>
+        <div class="row">
+          <input id="inCode" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7Q2MX" required>
+          <button class="btn primary">参加</button>
+        </div>
+      </form>
+    </div>
+    <ol class="howto">
+      <li><b>部屋を作る</b>出題者が曲を登録して、招待リンクをコピー</li>
+      <li><b>Discord に貼る</b>みんなはリンクを開いて名前を入れるだけ</li>
+      <li><b>早押し</b>わかったら押す。正解なら出題者が「ピンポン」</li>
+    </ol>
+  </section>
+
+  <section id="vJoin" class="join" hidden>
+    <form class="panel join-card" id="fName">
+      <p class="eyebrow">部屋 <span id="joinCode"></span></p>
+      <h2>名前を入れて参加</h2>
+      <label for="inName">表示名（16文字まで）</label>
+      <input id="inName" maxlength="16" autocomplete="nickname" required placeholder="例: ねこ">
+      <button class="btn primary big">参加する</button>
+      <p class="note">曲と効果音が鳴ります。音量はあとから変えられます。</p>
+    </form>
+  </section>
+
+  <section id="vPlay" class="play" hidden>
+    <div data-slot="play"></div>
+    <div class="console">
+      <div class="buzz-wrap" id="buzzWrap">
+        <button class="buzzer" id="buzzer" type="button" disabled>押す</button>
+        <p class="hint" id="buzzHint"></p>
+      </div>
+      <form class="ans" id="fAns" hidden>
+        <label for="inAns">答え</label>
+        <div class="row">
+          <input id="inAns" maxlength="60" autocomplete="off" placeholder="曲名を入力">
+          <button class="btn primary" id="ansBtn">送信</button>
+        </div>
+        <p class="hint" id="ansHint"></p>
+      </form>
+      <button class="btn small retry" id="retry" type="button" hidden>もう一度読み込む</button>
+    </div>
+    <section class="panel">
+      <h3>得点</h3>
+      <ol class="scores" id="pScores"></ol>
+    </section>
+    <section class="panel" id="pSettings">
+      <h3>音量</h3>
+      <div class="vol">
+        <label for="volBgmP">BGM <input type="range" id="volBgmP" data-vol="bgm" min="0" max="100"></label>
+        <label for="volSfxP">効果音 <input type="range" id="volSfxP" data-vol="sfx" min="0" max="100"></label>
+      </div>
+      <form class="rename" id="fRename">
+        <label for="inRename">名前を変える</label>
+        <div class="row">
+          <input id="inRename" maxlength="16" autocomplete="nickname">
+          <button class="btn">変更</button>
+        </div>
+      </form>
+    </section>
+  </section>
+
+  <section id="vHost" class="host" hidden>
+    <div class="col">
+      <div data-slot="host"></div>
+      <section class="panel ctl">
+        <div class="now">
+          <span class="lbl">この問題の答え</span>
+          <b id="hAnswer">—</b>
+          <span class="ready" id="hReady"></span>
+        </div>
+        <p class="err" id="hErr" hidden></p>
+        <div class="row wrap">
+          <button class="btn primary" id="hPlay" type="button" disabled>再生</button>
+          <button class="btn" id="hRestart" type="button" disabled>頭から</button>
+          <button class="btn" id="hReveal" type="button" disabled>答えを表示</button>
+          <button class="btn" id="hNext" type="button">次の問題</button>
+        </div>
+        <div class="row wrap opts">
+          <div class="seg" role="group" aria-label="答え方">
+            <button type="button" data-mode="buzz" aria-pressed="true">早押し</button>
+            <button type="button" data-mode="text" aria-pressed="false">回答パネル</button>
+          </div>
+          <label class="check" for="hAuto"><input type="checkbox" id="hAuto" checked>押されたら止める</label>
+          <label class="check" for="hRand"><input type="checkbox" id="hRand">ランダムに出題</label>
+        </div>
+        <div class="vol">
+          <label for="volBgmH">BGM <input type="range" id="volBgmH" data-vol="bgm" min="0" max="100"></label>
+          <label for="volSfxH">効果音 <input type="range" id="volSfxH" data-vol="sfx" min="0" max="100"></label>
+        </div>
+        <p class="keys"><kbd>Space</kbd>再生／停止　<kbd>O</kbd>正解　<kbd>X</kbd>不正解</p>
+      </section>
+      <section class="panel judge">
+        <h3 id="jTitle">早押し</h3>
+        <div id="hJudge"></div>
+        <div class="sfx">
+          <span class="lbl">効果音だけ鳴らす</span>
+          <button class="btn small" id="sfxPin" type="button">ピンポン</button>
+          <button class="btn small" id="sfxBubu" type="button">ブブー</button>
+        </div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="panel invite">
+        <h3>招待リンク</h3>
+        <p class="link"><code id="hLink"></code></p>
+        <div class="row wrap">
+          <button class="btn primary" id="hCopy" type="button">リンクをコピー</button>
+          <button class="btn" id="hCopyMsg" type="button">Discord 用の文をコピー</button>
+        </div>
+        <p class="note" id="hNote">このタブが部屋そのものです。閉じると部屋が止まるので、遊んでいる間は開いたままにしてください。</p>
+      </section>
+      <section class="panel">
+        <h3>参加者と得点 <span class="count" id="hCount"></span><button class="btn tiny" id="hReset" type="button">得点をリセット</button></h3>
+        <ol class="scores" id="hScores"></ol>
+      </section>
+      <section class="panel" id="listPanel">
+        <h3>曲リスト <span class="count" id="trCount"></span><button class="btn tiny" id="trUnplay" type="button" hidden>出題済みを戻す</button></h3>
+        <form class="row" id="fAdd">
+          <input id="inUrl" autocomplete="off" placeholder="YouTube か音声ファイルの URL" aria-label="YouTube か音声ファイルの URL">
+          <button class="btn primary">追加</button>
+        </form>
+        <label class="drop" id="drop" for="inFile">
+          <input type="file" id="inFile" multiple accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac">
+          <span>MP3 などの音声ファイルを選ぶ<br><small>ここにドラッグ＆ドロップもできます</small></span>
+        </label>
+        <ol class="tracks" id="trList"></ol>
+      </section>
+    </div>
+  </section>
+</main>
+
+<div class="stage" id="stage" hidden>
+  <div class="st-head">
+    <span class="plate" id="stQ">待機中</span>
+    <span class="st-status" id="stStatus" aria-live="polite"></span>
+    <span class="clock" aria-label="経過秒数"><span id="stClock">--.-</span><small>秒</small></span>
+  </div>
+  <div class="screen">
+    <div id="ytmount"></div>
+    <div class="cover" id="cover">
+      <span class="cover-q" id="coverQ">♪</span>
+      <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <button class="unlock" id="unlock" type="button" hidden></button>
+  </div>
+  <p class="answer" id="stAnswer" hidden><span>答え</span><b id="stAnswerText"></b></p>
+</div>
+
+<div class="flash" id="flash" hidden aria-hidden="true">
+  <svg class="mk mk-pin" viewBox="0 0 100 100"><circle class="edge" cx="50" cy="50" r="35"/><circle class="ink" cx="50" cy="50" r="35"/></svg>
+  <svg class="mk mk-bubu" viewBox="0 0 100 100"><path class="edge" d="M22 22L78 78M78 22L22 78"/><path class="ink" d="M22 22L78 78M78 22L22 78"/></svg>
+  <div class="fl-text"><span id="flLabel"></span><b id="flName"></b></div>
+</div>
+<p class="sr" id="sr" aria-live="assertive"></p>
+<div class="toast" id="toast" role="status" hidden></div>
+<audio id="aud" preload="auto"></audio>
+<noscript><p style="padding:16px">JavaScript を有効にしてください。</p></noscript>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
+<script>
+'use strict';
+// ---------- utils ----------
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+const tab = {
+  get(k) { try { return sessionStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, v); } catch {} },
+};
+const rid = (n, abc = 'abcdefghijkmnpqrstuvwxyz23456789') => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => abc[b % abc.length]).join('');
+const PREFIX = 'pinpon-intro-v1-';
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clock = s => { s = +s || 0; const m = Math.floor(s / 60), r = +(s - m * 60).toFixed(1); return `${m}:${r < 10 ? '0' : ''}${r}`; };
+const unclock = v => { const m = String(v).trim().match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/); return m ? (+m[1] || 0) * 60 + +m[2] : 0; };
+const sec = s => `${(+s).toFixed(2)}秒`;
+const isField = e => /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable;
+const hoverable = matchMedia('(hover: hover)').matches;
+let role = null; // null | 'join' | 'play' | 'host'
+
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2800); }
+function setNet(kind, text) { $('#net').hidden = false; $('#netDot').className = 'dot ' + kind; $('#netText').textContent = text; }
+const VIEWS = ['vLanding', 'vJoin', 'vPlay', 'vHost'];
+function show(id) { for (const v of VIEWS) $('#' + v).hidden = v !== id; }
+
+// ---------- sound effects (Web Audio) ----------
+const settings = Object.assign({bgm: .8, sfx: .8}, store.get('pi.vol', {}));
+let AC, sfxGain;
+function ac() {
+  if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)(); sfxGain = AC.createGain(); sfxGain.gain.value = settings.sfx; sfxGain.connect(AC.destination); }
+  if (AC.state === 'suspended') AC.resume().catch(() => {});
+  return AC;
+}
+function note(f, t, dur, {type = 'sine', vol = .3, hold = false, lp = 0} = {}) {
+  const c = ac(), o = c.createOscillator(), g = c.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t);
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + .012);
+  if (hold) g.gain.setValueAtTime(vol, t + dur - .05);
+  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  let out = g;
+  if (lp) { out = c.createBiquadFilter(); out.type = 'lowpass'; out.frequency.value = lp; g.connect(out); }
+  o.connect(g); out.connect(sfxGain);
+  o.start(t); o.stop(t + dur + .05);
+}
+const SFX = {
+  pin() { const t = ac().currentTime + .02; note(1318.5, t, .5); note(2637, t, .3, {vol: .05}); note(1046.5, t + .22, 1.4); note(2093, t + .22, .7, {vol: .05}); },
+  bubu() { const t = ac().currentTime + .02; for (const [d, len] of [[0, .22], [.3, .72]]) { note(150, t + d, len, {type: 'square', vol: .16, hold: true, lp: 1500}); note(151.5, t + d, len, {type: 'sawtooth', vol: .08, hold: true, lp: 1500}); } },
+  buzz() { const t = ac().currentTime + .02; note(988, t, .11, {type: 'square', vol: .1, hold: true, lp: 4000}); note(1976, t + .1, .7, {type: 'triangle', vol: .3}); note(2963, t + .1, .35, {vol: .04}); },
+};
+const SILENT = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+// Must run inside a click: lets later script-started audio play with sound.
+function unlockAudio() { ac(); const a = $('#aud'); if (!a.getAttribute('src')) { a.src = SILENT; a.play().then(() => a.pause()).catch(() => {}); } }
+
+let flashT;
+function playFx(fx, players) {
+  if (!fx || !SFX[fx.k]) return;
+  SFX[fx.k]();
+  const f = $('#flash'), name = fx.pid ? players?.[fx.pid]?.name || '' : '';
+  const label = {pin: '正解！', bubu: '不正解', buzz: '回答権'}[fx.k];
+  f.className = 'flash ' + fx.k;
+  $('#flLabel').textContent = name ? label : '';
+  $('#flName').textContent = name || (fx.k === 'buzz' ? '' : label);
+  $('#sr').textContent = name ? `${label} ${name}` : label;
+  f.hidden = false; void f.offsetWidth; f.classList.add('show');
+  clearTimeout(flashT); flashT = setTimeout(() => { f.hidden = true; }, fx.k === 'buzz' ? 1300 : 1600);
+}
+
+// ---------- music player: YouTube iframe or <audio> ----------
+const Player = (() => {
+  const aud = $('#aud');
+  let yt = null, apiP = null, kind = null, wait = null, want = false, tok = 0, blockT = 0;
+  let base = {t: 0, at: 0, on: false}, vol = settings.bgm;
+  const subs = new Set(), emit = () => subs.forEach(f => f());
+  const cb = {error: () => {}, blocked: () => {}};
+  const YT_ERR = {2: '動画の ID が正しくありません', 5: 'この動画はブラウザで再生できません', 100: '動画が見つかりません（削除か非公開）', 101: '埋め込みが許可されていない動画です', 150: '埋め込みが許可されていない動画です', 153: 'YouTube の再生設定エラーです'};
+
+  function api() {
+    return apiP ??= new Promise((res, rej) => {
+      window.onYouTubeIframeAPIReady = res;
+      const s = document.createElement('script');
+      s.src = 'https://www.youtube.com/iframe_api';
+      s.onerror = () => { apiP = null; rej(new Error('YouTube を読み込めませんでした')); };
+      document.head.append(s);
+    }).then(() => new Promise(res => {
+      yt = new YT.Player('ytmount', {
+        width: '100%', height: '100%',
+        playerVars: {controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, playsinline: 1, rel: 0},
+        events: {
+          onReady: () => res(),
+          onStateChange: e => {
+            const P = YT.PlayerState;
+            base = {t: yt.getCurrentTime(), at: performance.now(), on: e.data === P.PLAYING};
+            // Preload trick: play muted until the first frame, then park paused at the start.
+            if (wait && e.data === P.PLAYING) {
+              const w = wait; wait = null;
+              yt.pauseVideo(); yt.seekTo(w.start, true);
+              setTimeout(() => { yt.unMute(); yt.setVolume(vol * 100); }, 250);
+              w.res();
+            }
+            emit();
+          },
+          onError: e => {
+            const err = new Error(YT_ERR[e.data] || `YouTube エラー（${e.data}）`);
+            if (wait) { const w = wait; wait = null; w.rej(err); } else cb.error(err);
+          },
+        },
+      });
+    }));
+  }
+  function stop() {
+    want = false; clearTimeout(blockT);
+    if (wait) { wait.rej(new Error('superseded')); wait = null; }
+    try { yt?.pauseVideo(); } catch {}
+    aud.pause();
+  }
+  async function load(tr, src) {
+    const my = ++tok;
+    stop();
+    kind = null;
+    if (tr.kind === 'yt') {
+      await api();
+      if (my !== tok) throw new Error('superseded');
+      kind = 'yt';
+      return new Promise((res, rej) => {
+        const w = wait = {res, rej, start: tr.start || 0};
+        yt.mute();
+        yt.loadVideoById({videoId: tr.vid, startSeconds: tr.start || 0});
+        setTimeout(() => { if (wait === w) { wait = null; yt.pauseVideo(); yt.unMute(); yt.setVolume(vol * 100); res(); } }, 12000);
+      });
+    }
+    kind = 'aud';
+    return new Promise((res, rej) => {
+      const done = err => {
+        aud.onloadedmetadata = aud.onerror = null; clearTimeout(to);
+        if (my !== tok) rej(new Error('superseded')); else if (err) rej(err); else res();
+      };
+      const to = setTimeout(() => done(new Error('読み込みに時間がかかりすぎました')), 20000);
+      aud.onloadedmetadata = () => { if (tr.start) aud.currentTime = tr.start; done(); };
+      aud.onerror = () => done(new Error('音声を読み込めません（形式か URL を確認してください）'));
+      aud.volume = vol; aud.src = src; aud.load();
+    });
+  }
+  function playing() { return kind === 'yt' ? base.on : kind === 'aud' ? !aud.paused : false; }
+  function stuck() {
+    if (!want) return false;
+    if (kind === 'yt') { const s = yt?.getPlayerState?.(); return s !== YT.PlayerState.PLAYING && s !== YT.PlayerState.BUFFERING; }
+    return kind === 'aud' && aud.paused;
+  }
+  function play() {
+    want = true;
+    if (kind === 'yt' && yt) { yt.unMute(); yt.setVolume(vol * 100); yt.playVideo(); }
+    else if (kind === 'aud') aud.play().catch(e => { if (e.name === 'NotAllowedError') cb.blocked(); });
+    clearTimeout(blockT);
+    blockT = setTimeout(() => { if (stuck()) cb.blocked(); }, 2500);
+  }
+  function pause() { want = false; clearTimeout(blockT); if (kind === 'yt') yt?.pauseVideo(); else if (kind === 'aud') aud.pause(); }
+  function seek(t) {
+    if (kind === 'yt' && yt) { yt.seekTo(t, true); base = {t, at: performance.now(), on: base.on}; }
+    else if (kind === 'aud') aud.currentTime = t;
+  }
+  // YouTube reports its clock only a few times a second, so extrapolate while playing.
+  function time() {
+    if (kind === 'yt') return base.on ? base.t + (performance.now() - base.at) / 1000 : yt?.getCurrentTime?.() ?? 0;
+    return kind === 'aud' ? aud.currentTime : 0;
+  }
+  function volume(v) { vol = v; aud.volume = v; try { yt?.setVolume?.(v * 100); } catch {} }
+  aud.addEventListener('play', emit);
+  aud.addEventListener('pause', emit);
+  return {api, load, stop, play, pause, seek, time, playing, volume, on: f => subs.add(f), cb, get kind() { return kind; }};
+})();
+
+function bindVolume(root) {
+  for (const el of $$('[data-vol]', root)) {
+    const k = el.dataset.vol;
+    el.value = Math.round(settings[k] * 100);
+    el.addEventListener('input', () => {
+      settings[k] = el.value / 100; store.set('pi.vol', settings);
+      if (k === 'bgm') Player.volume(settings.bgm); else if (sfxGain) sfxGain.gain.value = settings.sfx;
+    });
+  }
+  Player.volume(settings.bgm);
+}
+
+// ---------- stage (shared by host and players) ----------
+let clockStart = null;
+setInterval(() => { $('#stClock').textContent = clockStart == null ? '--.-' : Math.max(0, Player.time() - clockStart).toFixed(1); }, 100);
+function stage({q, status, reveal, answer, kind}) {
+  $('#stQ').textContent = q ? `第${q}問` : '待機中';
+  $('#stStatus').textContent = status;
+  $('#cover').hidden = !!(reveal && kind === 'yt');
+  $('#coverQ').textContent = q && !reveal ? '?' : '♪';
+  $('#stAnswer').hidden = !reveal;
+  $('#stAnswerText').textContent = answer || '';
+}
+let blockedN = 0;
+Player.on(() => {
+  const on = Player.playing();
+  $('#stage').classList.toggle('playing', on);
+  if (on) { $('#unlock').hidden = true; $('#stage').classList.remove('tapthru'); }
+  if (role === 'play') renderPlay();
+});
+Player.cb.blocked = () => {
+  blockedN++;
+  const thru = blockedN > 1 && Player.kind === 'yt'; // iPhone: YouTube only starts from a tap on the video itself
+  $('#stage').classList.toggle('tapthru', thru);
+  $('#unlock').textContent = thru ? '音が出ないときは、この画面を直接タップしてください' : '音が出ていません。ここを押して再生';
+  $('#unlock').hidden = false;
+};
+$('#unlock').addEventListener('click', () => { unlockAudio(); $('#unlock').hidden = true; Player.play(); });
+
+function scoresHTML(players, st, {me = '', host = false} = {}) {
+  const list = Object.entries(players || {}).map(([pid, p]) => ({pid, ...p}));
+  if (!list.length) return `<li class="empty">${host ? 'まだ誰も来ていません。招待リンクを送ってください。' : 'まだ誰もいません'}</li>`;
+  list.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'ja'));
+  return list.map(p => {
+    const rank = 1 + list.filter(x => x.score > p.score).length;
+    const b = st?.buzzes?.find(x => x.pid === p.pid), tags = [];
+    if (st?.right?.includes(p.pid)) tags.push('<span class="tag maru">○</span>');
+    else if (st?.wrong?.includes(p.pid)) tags.push('<span class="tag batsu">×</span>');
+    if (st?.answerer === p.pid) tags.push('<span class="tag hot">回答中</span>');
+    if (b) tags.push(`<span class="tag sec">${sec(b.pos)}</span>`);
+    if (!st?.reveal && st?.answered?.includes(p.pid)) tags.push('<span class="tag">回答済</span>');
+    if (!p.on) tags.push('<span class="tag">離席中</span>');
+    const said = st?.reveal && st.answers?.[p.pid] ? `<span class="said">「${esc(st.answers[p.pid].text)}」</span>` : '';
+    const id = esc(p.pid), nm = esc(p.name);
+    const ctl = host ? `<span class="adj"><button class="btn tiny" type="button" data-adj="-1" data-pid="${id}" aria-label="${nm}を1点減らす">−1</button><button class="btn tiny" type="button" data-adj="1" data-pid="${id}" aria-label="${nm}に1点足す">＋1</button>${p.on ? '' : `<button class="btn tiny ghost" type="button" data-kick="${id}">消す</button>`}</span>` : '';
+    return `<li class="${p.pid === me ? 'me' : ''} ${p.on ? '' : 'off'}"><span class="rank">${rank}</span><span class="who"><span class="nm">${nm}</span>${p.pid === me ? '<span class="you">あなた</span>' : ''}${tags.join('')}${said}</span><span class="pt">${p.score}</span>${ctl}</li>`;
+  }).join('');
+}
+
+// ---------- participant ----------
+const Me = {pid: tab.get('pi.pid') || rid(12), id: null, name: store.get('pi.name', '')};
+let code = '', gPeer = null, conn = null, S = null, recvAt = 0, lastFx = null, lastMsg = 0, dialT = 0, dup = false;
+let load = 'idle', loadErr = '', loadTok = 0, filePct = null, myQ = -1, myBuzz = null, myAns = null, applied = {q: -1, pe: -1};
+const files = {}, fileWait = {};
+const send = m => { if (conn?.open) try { conn.send(m); } catch {} };
+
+function showJoin(c) {
+  code = c; role = 'join';
+  show('vJoin');
+  $('#joinCode').textContent = c; $('#roomChip').hidden = false; $('#roomCode').textContent = c;
+  $('#inName').value = Me.name;
+  setTimeout(() => $('#inName').focus(), 50);
+}
+const cleanName = v => v.replace(/\s+/g, ' ').trim().slice(0, 16);
+$('#fName').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = cleanName($('#inName').value);
+  if (!name || role === 'play') return;
+  Me.name = name; store.set('pi.name', name); tab.set('pi.pid', Me.pid);
+  unlockAudio();
+  role = 'play'; show('vPlay');
+  $('[data-slot=play]').append($('#stage')); $('#stage').hidden = false;
+  bindVolume($('#pSettings'));
+  $('#meChip').hidden = false; $('#meName').textContent = name; $('#inRename').value = name;
+  Player.api().catch(() => {});
+  guestStart(); renderPlay();
+});
+$('#fRename').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = cleanName($('#inRename').value);
+  if (!name || name === Me.name) return;
+  Me.name = name; store.set('pi.name', name); $('#meName').textContent = name;
+  send({t: 'hello', pid: Me.pid, name}); toast('名前を変えました');
+});
+
+function guestStart() {
+  const peer = gPeer = new Peer({debug: 1});
+  let opened = false;
+  setNet('warn', '接続しています…');
+  peer.on('open', () => { opened = true; dial(); });
+  peer.on('disconnected', () => setTimeout(() => { if (!peer.destroyed && peer.disconnected) peer.reconnect(); }, 1500));
+  peer.on('error', e => {
+    if (e.type === 'peer-unavailable') { setNet('bad', '部屋が見つかりません。出題者の画面が開いているか確認してください'); conn = null; redial(3000); }
+    else if (!opened) { setNet('bad', '接続サーバーに届きません。再試行します'); peer.destroy(); setTimeout(guestStart, 4000); }
+    else if (e.type === 'browser-incompatible') setNet('bad', 'このブラウザは対応していません');
+  });
+}
+function redial(ms) {
+  clearTimeout(dialT);
+  if (dup) return;
+  dialT = setTimeout(() => { if (gPeer?.open) dial(); else if (gPeer && !gPeer.destroyed && gPeer.disconnected) gPeer.reconnect(); }, ms);
+}
+function dial() {
+  if (dup || conn?.open) return;
+  const c = conn = gPeer.connect(PREFIX + code, {reliable: true});
+  const watchdog = setTimeout(() => { if (conn === c && !c.open) { c.close(); conn = null; redial(500); } }, 10000);
+  c.on('open', () => {
+    if (conn !== c) return;
+    clearTimeout(watchdog);
+    setNet('ok', '接続中'); lastFx = null; lastMsg = Date.now();
+    send({t: 'hello', pid: Me.pid, name: Me.name});
+    for (const [fid, w] of Object.entries(fileWait)) { w.parts = null; send({t: 'need', fid}); }
+  });
+  c.on('data', d => { if (conn === c) onHostData(d); });
+  const lost = () => { if (conn !== c) return; clearTimeout(watchdog); conn = null; if (!dup) { setNet('warn', '切れました。つなぎ直しています…'); redial(2000); } };
+  c.on('close', lost);
+  c.on('error', lost);
+}
+setInterval(() => {
+  if (!conn?.open) return;
+  send({t: 'p'});
+  if (Date.now() - lastMsg > 13000) conn.close(); // host tab went away without saying so
+}, 4000);
+
+function onHostData(d) {
+  lastMsg = Date.now();
+  if (!d || typeof d !== 'object') return;
+  if (d.t === 's' && d.s) { S = d.s; recvAt = performance.now(); onState(); }
+  else if (d.t === 'fs' || d.t === 'fc' || d.t === 'fe') onFile(d);
+  else if (d.t === 'you' && typeof d.id === 'string') { Me.id = d.id; renderPlay(); }
+  else if (d.t === 'dup') { dup = true; setNet('bad', '別のタブで参加しています。こちらは止めました'); }
+}
+function onState() {
+  if (lastFx == null) lastFx = S.fx?.n ?? 0; // first state after (re)connecting: don't replay an old sound
+  else if (S.fx && S.fx.n !== lastFx) { lastFx = S.fx.n; playFx(S.fx, S.players); }
+  if (S.q !== myQ) { myQ = S.q; myBuzz = myAns = null; $('#inAns').value = ''; }
+  syncMedia(); renderPlay();
+}
+function syncMedia() {
+  if (!S.track) {
+    if (load !== 'idle') { loadTok++; Player.stop(); load = 'idle'; clockStart = null; }
+    applied = {q: S.q, pe: S.pe};
+    return;
+  }
+  if (applied.q !== S.q) { applied = {q: S.q, pe: -1}; startLoad(); return; }
+  if (load === 'ready') applyPlayback();
+}
+async function startLoad() {
+  const s = S, my = ++loadTok;
+  load = 'loading'; loadErr = ''; filePct = null; clockStart = null;
+  renderPlay();
+  try {
+    const src = s.track.kind === 'file' ? await getFile(s.track.fid) : s.track.url;
+    if (my !== loadTok) return;
+    await Player.load(s.track, src);
+    if (my !== loadTok) return;
+    load = 'ready'; filePct = null; clockStart = s.track.start || 0;
+    send({t: 'ready', q: s.q});
+    applyPlayback();
+  } catch (e) {
+    if (my !== loadTok) return;
+    load = 'error'; loadErr = e.message || String(e);
+    send({t: 'err', q: s.q, msg: loadErr});
+  }
+  renderPlay();
+}
+function applyPlayback() {
+  if (S.pe === applied.pe) return;
+  applied.pe = S.pe;
+  const target = S.time + (S.playing ? (performance.now() - recvAt) / 1000 : 0);
+  // Small offsets are kept on purpose: buzz times are measured on each player's own clock.
+  if (Math.abs(Player.time() - target) > 1.5) Player.seek(target);
+  if (S.playing) Player.play(); else Player.pause();
+}
+$('#retry').addEventListener('click', () => { unlockAudio(); applied.q = -1; if (S) syncMedia(); });
+
+function getFile(fid) {
+  if (files[fid]) return Promise.resolve(files[fid]);
+  let w = fileWait[fid];
+  if (!w) { w = fileWait[fid] = {}; w.p = new Promise((res, rej) => { w.res = res; w.rej = rej; }); send({t: 'need', fid}); }
+  return w.p;
+}
+function onFile(d) {
+  const w = fileWait[d.fid];
+  if (!w) return;
+  if (d.t === 'fe') { delete fileWait[d.fid]; w.rej(new Error('出題者の側で音声ファイルが見つかりません')); return; }
+  if (d.t === 'fs') { w.parts = new Array(d.n); w.n = d.n; w.got = 0; w.type = d.type; return; }
+  if (!w.parts || w.parts[d.i] || !d.b?.byteLength) return;
+  w.parts[d.i] = d.b; w.got++;
+  const pct = Math.floor(w.got / w.n * 100);
+  if (pct !== filePct) { filePct = pct; renderPlay(); }
+  if (w.got === w.n) { delete fileWait[d.fid]; w.res(files[d.fid] = URL.createObjectURL(new Blob(w.parts, {type: w.type || 'audio/mpeg'}))); }
+}
+
+const inQuestion = () => S?.track && load === 'ready' && !S.reveal;
+function canBuzz() {
+  return !!(inQuestion() && S.mode === 'buzz' && S.playing && Player.playing() && !S.done && !myBuzz
+    && !S.buzzes.some(b => b.pid === Me.id) && !S.wrong.includes(Me.id));
+}
+function canAnswer() { return !!(inQuestion() && S.mode === 'text' && S.started && !S.right.includes(Me.id) && !S.wrong.includes(Me.id)); }
+const heard = () => Math.max(0, Player.time() - (S.track.start || 0));
+function doBuzz() {
+  if (!canBuzz()) return;
+  myBuzz = {pos: heard()};
+  send({t: 'buzz', q: S.q, pos: myBuzz.pos});
+  renderPlay();
+}
+$('#buzzer').addEventListener('pointerdown', e => { e.preventDefault(); doBuzz(); });
+$('#fAns').addEventListener('submit', e => {
+  e.preventDefault();
+  const text = $('#inAns').value.replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (!text || !canAnswer()) return;
+  myAns = {text, pos: heard()};
+  send({t: 'ans', q: S.q, text, pos: myAns.pos});
+  renderPlay();
+});
+
+function pStatus() {
+  if (!S) return conn?.open ? '部屋に入りました' : '部屋に接続しています…';
+  if (!S.track) return '出題者が曲を選んでいます';
+  if (load === 'loading') return filePct != null ? `曲を受け取っています… ${filePct}%` : '曲を読み込んでいます…';
+  if (load === 'error') return `読み込めませんでした：${loadErr}`;
+  if (S.reveal) return '答え合わせ';
+  const nm = pid => S.players[pid]?.name || '???';
+  if (S.mode === 'buzz') {
+    if (S.done) return `${nm(S.right[S.right.length - 1])}さんが正解！`;
+    if (S.answerer) return S.answerer === Me.id ? 'あなたの番です。ボイスチャットで答えてください' : `${nm(S.answerer)}さんが回答中`;
+    if (S.buzzes.some(b => !S.wrong.includes(b.pid))) return '判定中…';
+  } else {
+    if (S.right.includes(Me.id)) return 'あなたは正解！';
+    if (S.wrong.includes(Me.id)) return '残念、不正解';
+  }
+  if (!S.started) return 'まもなく始まります';
+  if (!S.playing) return '一時停止中';
+  return S.mode === 'buzz' ? 'わかったら押す！' : '答えを入力して送信';
+}
+function renderPlay() {
+  if (role !== 'play') return;
+  const s = S;
+  stage({q: s?.track ? s.q : 0, status: pStatus(), reveal: s?.reveal, answer: s?.answer, kind: s?.track?.kind});
+  const textMode = s?.mode === 'text';
+  $('#buzzWrap').hidden = textMode; $('#fAns').hidden = !textMode;
+  const mine = s?.buzzes?.find(b => b.pid === Me.id) || myBuzz;
+  const right = s?.right?.includes(Me.id), wrong = s?.wrong?.includes(Me.id), isAns = s?.answerer === Me.id;
+  const bz = $('#buzzer'), ok = canBuzz();
+  bz.disabled = !ok;
+  bz.classList.toggle('pressed', !!mine);
+  bz.classList.toggle('win', !!(isAns || right));
+  bz.classList.toggle('out', !!wrong);
+  bz.textContent = right ? '正解！' : wrong ? 'お手つき' : isAns ? '回答権' : mine ? '押した！' : '押す';
+  $('#buzzHint').textContent = mine ? `${sec(mine.pos)}で押しました` : wrong ? 'この問題はもう押せません'
+    : ok ? (hoverable ? 'スペースキーでも押せます' : '') : s?.track && load === 'ready' && !s.started ? '曲が始まったら押せます' : '';
+  const can = canAnswer();
+  $('#inAns').disabled = $('#ansBtn').disabled = !can;
+  const sent = myAns || (s?.answered?.includes(Me.id) ? {} : null);
+  $('#ansHint').textContent = right ? '正解！' : wrong ? '不正解でした' : sent
+    ? (sent.text ? `送信済み「${sent.text}」（${sec(sent.pos)}）。判定されるまでは送り直せます` : '送信済み')
+    : s?.track && !s.started ? '曲が始まったら送信できます' : '';
+  $('#retry').hidden = load !== 'error';
+  $('#pScores').innerHTML = scoresHTML(s?.players, s, {me: Me.id});
+}
+
+// ---------- host ----------
+const CODE_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const G = {
+  code: '', mode: 'buzz', auto: true, rand: false, q: 0, cur: null, track: null, answer: '', loaded: false, err: '',
+  playing: false, pe: 0, started: false, reveal: false, done: false,
+  buzzes: [], answerer: null, wrong: [], right: [], answers: {}, ready: new Set(), errs: {}, players: {}, keys: {}, fx: {n: 0, k: '', pid: ''},
+};
+let tracks = store.get('pi.tracks', []);
+const conns = new Map(), memFiles = {}, urlCache = {};
+let decideT = 0, passT = 0, saveT = 0;
+
+function hostStart(resume) {
+  const saved = store.get('pi.host', null);
+  if (resume && saved?.code) {
+    Object.assign(G, {code: saved.code, mode: saved.mode === 'text' ? 'text' : 'buzz', auto: saved.auto !== false, rand: !!saved.rand, q: saved.q || 0, players: saved.players || {}, keys: saved.keys || {}, fx: {n: saved.fxn || 0, k: '', pid: ''}});
+    for (const p of Object.values(G.players)) p.on = false;
+  } else G.code = Array.from(crypto.getRandomValues(new Uint8Array(6)), b => CODE_ABC[b % 32]).join('');
+  role = 'host'; show('vHost');
+  $('[data-slot=host]').append($('#stage')); $('#stage').hidden = false;
+  bindVolume($('#vHost'));
+  $('#roomChip').hidden = false; $('#roomCode').textContent = G.code;
+  if (location.protocol === 'file:') $('#hNote').textContent = 'このページはファイルとして開かれています。参加者が開けるよう、Web に置いてから使ってください。';
+  unlockAudio();
+  Player.api().catch(e => toast(e.message));
+  hostOpen(); saveHost(); renderTracks(); renderHost();
+  addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
+  setInterval(() => {
+    for (const r of conns.values()) {
+      if (!r.conn.open) continue;
+      try { r.conn.send({t: 'p'}); } catch {}
+      if (Date.now() - r.last > 15000) { r.conn.close(); dropConn(r); }
+    }
+  }, 4000);
+}
+function hostOpen() {
+  const peer = new Peer(PREFIX + G.code, {debug: 1});
+  let opened = false;
+  setNet('warn', '部屋を開いています…');
+  peer.on('open', () => { opened = true; setNet('ok', '部屋オープン'); });
+  peer.on('connection', c => {
+    const rec = {conn: c, pid: null, sending: new Set(), last: Date.now()};
+    c.on('open', () => { rec.last = Date.now(); conns.set(c.peer, rec); try { c.send({t: 's', s: pub()}); } catch {} });
+    c.on('data', d => { rec.last = Date.now(); onGuest(rec, d); });
+    c.on('close', () => dropConn(rec));
+    c.on('error', () => dropConn(rec));
+  });
+  peer.on('disconnected', () => { setNet('warn', '再接続しています…'); setTimeout(() => { if (!peer.destroyed && peer.disconnected) peer.reconnect(); }, 1500); });
+  peer.on('error', e => {
+    if (e.type === 'unavailable-id' || !opened) {
+      setNet('bad', e.type === 'unavailable-id' ? 'この部屋はほかのタブで開いています。数秒後に再試行します' : '接続サーバーに届きません。再試行します');
+      peer.destroy(); setTimeout(hostOpen, 4000);
+    } else if (e.type === 'browser-incompatible') setNet('bad', 'このブラウザは対応していません');
+  });
+}
+function pub() {
+  return {
+    q: G.q, mode: G.mode, track: G.track, playing: G.playing, pe: G.pe, started: G.started,
+    time: G.track && G.loaded ? Player.time() : G.track?.start || 0,
+    reveal: G.reveal, answer: G.reveal ? G.answer : '', done: G.done,
+    buzzes: G.buzzes, answerer: G.answerer, wrong: G.wrong, right: G.right,
+    answered: Object.keys(G.answers), answers: G.reveal ? G.answers : {},
+    players: G.players, fx: G.fx,
+  };
+}
+function broadcast() {
+  const m = {t: 's', s: pub()};
+  for (const r of conns.values()) if (r.conn.open) try { r.conn.send(m); } catch {}
+  saveHost(); renderHost();
+}
+function saveHost() {
+  clearTimeout(saveT);
+  saveT = setTimeout(() => store.set('pi.host', {
+    code: G.code, mode: G.mode, auto: G.auto, rand: G.rand, q: G.q, fxn: G.fx.n, keys: G.keys,
+    players: Object.fromEntries(Object.entries(G.players).map(([k, p]) => [k, {name: p.name, score: p.score}])),
+  }), 300);
+}
+const saveTracks = () => store.set('pi.tracks', tracks);
+const who = pid => G.players[pid]?.name || '???';
+
+function onGuest(rec, d) {
+  if (!d || typeof d !== 'object') return;
+  if (d.t === 'hello') return hello(rec, d);
+  const pid = rec.pid;
+  if (!pid || !G.players[pid]) return;
+  if (d.t === 'buzz') onBuzz(pid, d);
+  else if (d.t === 'ans') onAns(pid, d);
+  else if (d.t === 'ready' && d.q === G.q) { G.ready.add(pid); delete G.errs[pid]; renderHost(); }
+  else if (d.t === 'err' && d.q === G.q) { G.errs[pid] = String(d.msg || '').slice(0, 80); renderHost(); }
+  else if (d.t === 'need') sendFile(rec, String(d.fid || ''));
+}
+function hello(rec, d) {
+  const secret = String(d.pid || ''); // private to this host; players are shown by a separate public id
+  if (!/^[a-z0-9]{6,24}$/.test(secret)) return;
+  const name = cleanName(String(d.name || '')) || '名無し';
+  let id = G.keys[secret];
+  if (!id || !G.players[id]) {
+    // Same name back from a new tab: continue with the old score instead of starting at 0.
+    id = Object.keys(G.players).find(k => !G.players[k].on && G.players[k].name === name) || rid(10);
+    G.keys[secret] = id;
+    G.players[id] ??= {name, score: 0};
+  }
+  for (const [k, r] of conns) if (r !== rec && r.pid === id) { conns.delete(k); try { r.conn.send({t: 'dup'}); } catch {} setTimeout(() => r.conn.close(), 200); }
+  rec.pid = id;
+  Object.assign(G.players[id], {name, on: true});
+  try { rec.conn.send({t: 'you', id}); } catch {}
+  broadcast();
+}
+function dropConn(rec) {
+  if (conns.get(rec.conn.peer) !== rec) return;
+  conns.delete(rec.conn.peer);
+  const p = G.players[rec.pid];
+  if (p && ![...conns.values()].some(r => r.pid === rec.pid)) { p.on = false; broadcast(); }
+}
+async function sendFile(rec, fid) {
+  if (!fid || rec.sending.has(fid)) return;
+  const blob = await getBlob(fid).catch(() => null);
+  if (!blob) { try { rec.conn.send({t: 'fe', fid}); } catch {} return; }
+  rec.sending.add(fid);
+  try {
+    const CH = 64000, n = Math.max(1, Math.ceil(blob.size / CH));
+    rec.conn.send({t: 'fs', fid, n, type: blob.type || 'audio/mpeg'});
+    for (let i = 0; i < n; i++) {
+      while (rec.conn.open && rec.conn.bufferSize > 24) await sleep(15);
+      if (!rec.conn.open) return;
+      rec.conn.send({t: 'fc', fid, i, b: await blob.slice(i * CH, (i + 1) * CH).arrayBuffer()});
+    }
+  } catch {} finally { rec.sending.delete(fid); }
+}
+
+async function cue(id) {
+  const t = tracks.find(x => x.id === id);
+  if (!t) return;
+  clearTimeout(decideT); clearTimeout(passT); decideT = passT = 0;
+  const start = +t.start || 0;
+  Object.assign(G, {
+    q: G.q + 1, cur: id, answer: t.answer || '（答え未入力）', loaded: false, err: '', playing: false, pe: G.pe + 1,
+    started: false, reveal: false, done: false, buzzes: [], answerer: null, wrong: [], right: [], answers: {}, ready: new Set(), errs: {},
+    track: t.kind === 'yt' ? {kind: 'yt', vid: t.vid, start} : t.kind === 'url' ? {kind: 'url', url: t.url, start} : {kind: 'file', fid: t.fid, start},
+  });
+  t.played = true; saveTracks(); renderTracks();
+  clockStart = null;
+  broadcast();
+  const q = G.q;
+  try {
+    const src = t.kind === 'file' ? await fileURL(t.fid) : t.url;
+    await Player.load(G.track, src);
+    if (q !== G.q) return;
+    G.loaded = true; clockStart = start;
+    if (t.warn) { t.warn = ''; saveTracks(); renderTracks(); }
+  } catch (e) {
+    if (q !== G.q || e.message === 'superseded') return;
+    G.err = e.message; t.warn = e.message; saveTracks(); renderTracks();
+  }
+  renderHost();
+}
+function togglePlay() {
+  if (!G.loaded) return;
+  if (G.playing) { G.playing = false; Player.pause(); }
+  else { G.playing = G.started = true; Player.play(); }
+  G.pe++; broadcast();
+}
+function restart() { if (!G.loaded) return; Player.seek(G.track.start); G.pe++; broadcast(); }
+function reveal() { if (!G.track || G.reveal) return; G.reveal = true; clearTimeout(decideT); clearTimeout(passT); decideT = passT = 0; broadcast(); }
+function next() {
+  const pool = tracks.filter(t => !t.played);
+  if (!pool.length) return toast('全部の曲を出題しました。「出題済みを戻す」でもう一度使えます');
+  const i = tracks.findIndex(x => x.id === G.cur);
+  cue((G.rand ? pool[Math.floor(Math.random() * pool.length)] : tracks.slice(i + 1).find(x => !x.played) || pool[0]).id);
+}
+function fx(k, pid = '') { G.fx = {n: G.fx.n + 1, k, pid}; playFx(G.fx, G.players); }
+function pickAnswerer() {
+  const b = G.buzzes.find(x => !G.wrong.includes(x.pid) && !G.right.includes(x.pid));
+  if (b) { G.answerer = b.pid; fx('buzz', b.pid); }
+}
+function onBuzz(pid, d) {
+  if (G.mode !== 'buzz' || d.q !== G.q || !G.started || G.reveal || G.done) return;
+  if (G.wrong.includes(pid) || G.buzzes.some(b => b.pid === pid)) return;
+  const pos = +d.pos;
+  if (!(pos >= 0 && pos < 36000)) return;
+  // ponytail: trusts each player's reported seconds; fine among friends, cheatable by editing JS.
+  G.buzzes.push({pid, pos}); G.buzzes.sort((a, b) => a.pos - b.pos);
+  if (!G.answerer && !decideT && !passT) {
+    if (G.auto && G.playing) { G.playing = false; G.pe++; Player.pause(); }
+    // Wait briefly so a near-simultaneous press with fewer seconds heard can still win.
+    decideT = setTimeout(() => { decideT = 0; if (!G.answerer && !G.done && !G.reveal) pickAnswerer(); broadcast(); }, 500);
+  }
+  broadcast();
+}
+function onAns(pid, d) {
+  if (G.mode !== 'text' || d.q !== G.q || !G.started || G.reveal || G.right.includes(pid) || G.wrong.includes(pid)) return;
+  const text = String(d.text || '').replace(/\s+/g, ' ').trim().slice(0, 60), pos = +d.pos;
+  if (!text || !(pos >= 0 && pos < 36000)) return;
+  G.answers[pid] = {text, pos};
+  broadcast();
+}
+function judge(pid, ok) {
+  const p = G.players[pid];
+  if (!G.track || !p || G.right.includes(pid) || G.wrong.includes(pid)) return;
+  if (ok) {
+    G.right.push(pid); p.score++; fx('pin', pid);
+    if (G.mode === 'buzz') { G.done = true; G.answerer = null; }
+  } else {
+    G.wrong.push(pid); fx('bubu', pid);
+    if (G.answerer === pid) {
+      G.answerer = null;
+      // Let the "ブブー" land before the next person in line gets the turn.
+      clearTimeout(passT);
+      passT = setTimeout(() => { passT = 0; if (!G.answerer && !G.done && !G.reveal) pickAnswerer(); broadcast(); }, 1300);
+    }
+  }
+  broadcast();
+}
+
+// file storage for uploaded tracks (IndexedDB so the list survives a reload)
+let idbP;
+function idb(op, key, val) {
+  idbP ??= new Promise((res, rej) => {
+    const r = indexedDB.open('pinpon-intro', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('files');
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+  return idbP.then(db => new Promise((res, rej) => {
+    const tx = db.transaction('files', op === 'get' ? 'readonly' : 'readwrite'), st = tx.objectStore('files');
+    const rq = op === 'get' ? st.get(key) : op === 'put' ? st.put(val, key) : st.delete(key);
+    tx.oncomplete = () => res(rq.result); tx.onerror = tx.onabort = () => rej(tx.error);
+  }));
+}
+async function getBlob(fid) { return memFiles[fid] || await idb('get', fid); }
+async function fileURL(fid) {
+  if (urlCache[fid]) return urlCache[fid];
+  const b = await getBlob(fid).catch(() => null);
+  if (!b) throw new Error('音声ファイルが見つかりません。もう一度追加してください');
+  return urlCache[fid] = URL.createObjectURL(b);
+}
+async function addFiles(list) {
+  let n = 0, mem = false;
+  for (const f of list) {
+    if (!/^audio\//.test(f.type) && !/\.(mp3|m4a|aac|wav|ogg|oga|opus|flac)$/i.test(f.name)) continue;
+    const fid = rid(12);
+    try { await idb('put', fid, f); } catch { memFiles[fid] = f; mem = true; }
+    tracks.push({id: rid(8), kind: 'file', fid, name: f.name, start: 0, answer: f.name.replace(/\.[^.]+$/, '').replace(/_+/g, ' ').trim()});
+    n++;
+  }
+  if (!n) return toast('音声ファイルが見つかりませんでした');
+  saveTracks(); renderTracks(); renderHost();
+  toast(mem ? `${n}曲を追加しました（このブラウザには保存できないため、再読み込みすると消えます）` : `${n}曲を追加しました`);
+}
+function parseYT(s) {
+  let u;
+  try { u = new URL(s); } catch { return /^[\w-]{11}$/.test(s) ? {id: s, t: 0} : null; }
+  const h = u.hostname.replace(/^(www|m|music)\./, '');
+  let id = null;
+  if (h === 'youtu.be') id = u.pathname.slice(1, 12);
+  else if (h === 'youtube.com' || h === 'youtube-nocookie.com') id = u.searchParams.get('v') || (u.pathname.match(/^\/(?:embed|shorts|live|v)\/([\w-]{11})/) || [])[1];
+  if (!id || !/^[\w-]{11}$/.test(id)) return null;
+  const t = u.searchParams.get('t') || u.searchParams.get('start') || '';
+  const m = t.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/);
+  return {id, t: m ? (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0) : 0};
+}
+async function checkYT(t) {
+  try {
+    const r = await fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + t.vid));
+    if (r.status === 401 || r.status === 403) t.warn = '埋め込みが許可されていない動画です（流せません）';
+    else if (!r.ok) t.warn = '動画が見つかりません';
+    else { const j = await r.json(); if (!t.answer) t.answer = String(j.title || '').slice(0, 80); }
+  } catch {}
+  saveTracks(); renderTracks();
+}
+function addUrls(raw) {
+  const parts = raw.split(/\s+|(?=https?:\/\/)/).filter(Boolean);
+  let n = 0;
+  for (const s of parts) {
+    const y = parseYT(s);
+    if (y) { const t = {id: rid(8), kind: 'yt', vid: y.id, start: y.t, answer: ''}; tracks.push(t); checkYT(t); n++; }
+    else if (/^https?:\/\/\S+$/i.test(s)) {
+      let name = '';
+      try { name = decodeURIComponent(new URL(s).pathname.split('/').pop()).replace(/\.[^.]+$/, ''); } catch {}
+      tracks.push({id: rid(8), kind: 'url', url: s, start: 0, answer: name.slice(0, 80)}); n++;
+    }
+  }
+  if (!n) return toast('YouTube か音声ファイルの URL を入れてください'), false;
+  saveTracks(); renderTracks(); renderHost();
+  return true;
+}
+function delTrack(id) {
+  const i = tracks.findIndex(t => t.id === id);
+  if (i < 0) return;
+  const [t] = tracks.splice(i, 1);
+  if (t.kind === 'file' && t.id !== G.cur) { idb('del', t.fid).catch(() => {}); delete memFiles[t.fid]; }
+  saveTracks(); renderTracks(); renderHost();
+}
+
+function renderTracks() {
+  const played = tracks.filter(t => t.played).length;
+  $('#trCount').textContent = tracks.length ? `${played}/${tracks.length}曲` : '';
+  $('#trUnplay').hidden = !played;
+  $('#trList').innerHTML = tracks.map((t, i) => {
+    const kind = t.kind === 'yt' ? 'YT' : t.kind === 'url' ? 'URL' : (t.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
+    const src = t.kind === 'yt' ? `youtu.be/${t.vid}` : t.kind === 'url' ? t.url : t.name;
+    return `<li data-id="${esc(t.id)}" class="${t.id === G.cur ? 'cur' : ''} ${t.played ? 'done' : ''}">
+      <span class="kind">${esc(kind)}</span>
+      <input class="tr-ans" value="${esc(t.answer)}" placeholder="答え（曲名）" aria-label="${i + 1}曲目の答え">
+      <span class="tr-actions">
+        <input class="tr-start" value="${clock(t.start)}" inputmode="decimal" aria-label="${i + 1}曲目の開始位置（分:秒）" title="開始位置（分:秒）">
+        <button class="btn small" type="button" data-act="cue">${t.played ? 'もう一度' : '出題'}</button>
+        <button class="btn small ghost" type="button" data-act="del" aria-label="${i + 1}曲目を削除">削除</button>
+      </span>
+      <p class="tr-sub">${t.played ? '<span class="tag">出題済み</span> ' : ''}${t.warn ? `<span class="warn">${esc(t.warn)}</span> ` : ''}${esc(src)}</p>
+    </li>`;
+  }).join('') || '<li class="empty">まだ曲がありません。YouTube の URL を貼るか、音声ファイルを追加してください。</li>';
+}
+function hStatus(readyN, online) {
+  if (!G.track) return tracks.length ? '曲リストの「出題」か「次の問題」で始めます' : 'まず曲リストに曲を追加してください';
+  if (G.err) return '曲を読み込めませんでした';
+  if (!G.loaded) return '曲を読み込んでいます…';
+  if (G.reveal) return '答えを表示しています';
+  if (G.mode === 'buzz') {
+    if (G.done) return '正解が出ました';
+    if (G.answerer) return `${who(G.answerer)}さんが回答中。○か×で判定してください`;
+    if (decideT || passT) return '判定中…';
+  }
+  if (!G.started) return `準備OK ${readyN}/${online}人。「再生」で出題スタート`;
+  return G.playing ? '再生中' : '一時停止中';
+}
+function judgeHTML() {
+  if (!G.track) return '<p class="empty">出題すると、ここに回答が並びます。</p>';
+  if (G.mode === 'buzz') {
+    let top;
+    if (G.answerer) {
+      const b = G.buzzes.find(x => x.pid === G.answerer), id = esc(G.answerer);
+      top = `<div class="answerer"><div class="who"><span class="lbl">回答者</span><b>${esc(who(G.answerer))}</b><span class="sec">${sec(b?.pos ?? 0)}</span></div>
+        <div class="jbtns"><button class="btn maru big" type="button" data-judge="1" data-pid="${id}">○ 正解</button><button class="btn batsu big" type="button" data-judge="0" data-pid="${id}">× 不正解</button></div></div>`;
+    } else if (decideT || passT) top = '<p class="waiting">判定中…</p>';
+    else if (G.done) top = '<p class="done">正解が出ました。「答えを表示」してから「次の問題」へ</p>';
+    else if (G.buzzes.length) top = '<p class="empty">お手つきが出ました。「再開」で続けます</p>';
+    else top = `<p class="empty">${G.started ? 'まだ誰も押していません' : '「再生」すると早押しを受け付けます'}</p>`;
+    const rows = G.buzzes.map((b, i) => {
+      const r = G.right.includes(b.pid), w = G.wrong.includes(b.pid);
+      return `<li><span class="ord">${i + 1}</span><span class="nm">${esc(who(b.pid))}</span><span class="sec">${sec(b.pos)}</span><span class="st ${r ? 'maru' : w ? 'batsu' : ''}">${r ? '○ 正解' : w ? '× 不正解' : b.pid === G.answerer ? '回答中' : '待ち'}</span></li>`;
+    }).join('');
+    return top + (rows ? `<ol class="blist">${rows}</ol>` : '');
+  }
+  const rows = Object.entries(G.answers).sort((a, b) => a[1].pos - b[1].pos).map(([pid, a]) => {
+    const r = G.right.includes(pid), w = G.wrong.includes(pid), id = esc(pid);
+    return `<li><div class="a-head"><b>${esc(who(pid))}</b><span class="sec">${sec(a.pos)}</span></div><p class="a-text">${esc(a.text)}</p>
+      <div class="jbtns">${r ? '<span class="mark maru" aria-label="正解">○</span>' : w ? '<span class="mark batsu" aria-label="不正解">×</span>'
+        : `<button class="btn maru small" type="button" data-judge="1" data-pid="${id}" aria-label="${esc(who(pid))}を正解にする">○</button><button class="btn batsu small" type="button" data-judge="0" data-pid="${id}" aria-label="${esc(who(pid))}を不正解にする">×</button>`}</div></li>`;
+  }).join('');
+  const waiting = Object.entries(G.players).filter(([pid, p]) => p.on && !G.answers[pid]).map(([, p]) => p.name);
+  return (rows ? `<ol class="alist">${rows}</ol>` : `<p class="empty">${G.started ? 'まだ回答がありません' : '「再生」すると回答を受け付けます'}</p>`)
+    + (G.started && waiting.length ? `<p class="note" style="margin-top:10px">まだの人：${esc(waiting.join('、'))}</p>` : '');
+}
+function renderHost() {
+  if (role !== 'host') return;
+  const online = Object.values(G.players).filter(p => p.on).length;
+  const readyN = [...G.ready].filter(pid => G.players[pid]?.on).length;
+  stage({q: G.track ? G.q : 0, status: hStatus(readyN, online), reveal: G.reveal, answer: G.answer, kind: G.track?.kind});
+  $('#hAnswer').textContent = G.track ? G.answer : '—';
+  $('#hReady').textContent = G.track ? `準備OK ${readyN}/${online}` : '';
+  const errs = [G.err && `出題者：${G.err}`, ...Object.entries(G.errs).map(([pid, m]) => `${who(pid)}：${m}`)].filter(Boolean);
+  $('#hErr').hidden = !errs.length; $('#hErr').textContent = errs.join(' ／ ');
+  $('#hPlay').textContent = G.playing ? '一時停止' : G.started ? '再開' : '再生';
+  $('#hPlay').disabled = $('#hRestart').disabled = !G.loaded;
+  $('#hReveal').disabled = !G.track || G.reveal;
+  $('#hNext').disabled = !tracks.length;
+  for (const b of $$('[data-mode]')) b.setAttribute('aria-pressed', b.dataset.mode === G.mode);
+  $('#hAuto').checked = G.auto; $('#hRand').checked = G.rand;
+  $('#jTitle').textContent = G.mode === 'buzz' ? '早押し' : '回答パネル';
+  $('#hJudge').innerHTML = judgeHTML();
+  $('#hCount').textContent = `${online}人`;
+  $('#hScores').innerHTML = scoresHTML(G.players, {...G, answered: Object.keys(G.answers)}, {host: true});
+  $('#hLink').textContent = invite();
+  for (const li of $$('#trList li[data-id]')) li.classList.toggle('cur', li.dataset.id === G.cur);
+}
+const invite = () => `${location.origin}${location.pathname}#${G.code}`;
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); toast('コピーしました'); }
+  catch {
+    const r = document.createRange(); r.selectNodeContents($('#hLink'));
+    getSelection().removeAllRanges(); getSelection().addRange(r);
+    toast('自動でコピーできませんでした。選択したリンクをコピーしてください');
+  }
+}
+
+$('#hPlay').addEventListener('click', togglePlay);
+$('#hRestart').addEventListener('click', restart);
+$('#hReveal').addEventListener('click', reveal);
+$('#hNext').addEventListener('click', next);
+$('#hCopy').addEventListener('click', () => copy(invite()));
+$('#hCopyMsg').addEventListener('click', () => copy(`イントロ早押しやります！\n参加はこちら → ${invite()}\n（部屋コード ${G.code}）`));
+$('#sfxPin').addEventListener('click', () => { fx('pin'); broadcast(); });
+$('#sfxBubu').addEventListener('click', () => { fx('bubu'); broadcast(); });
+$('.seg').addEventListener('click', e => { const b = e.target.closest('[data-mode]'); if (b && b.dataset.mode !== G.mode) { G.mode = b.dataset.mode; broadcast(); } });
+$('#hAuto').addEventListener('change', e => { G.auto = e.target.checked; saveHost(); });
+$('#hRand').addEventListener('change', e => { G.rand = e.target.checked; saveHost(); });
+$('#hJudge').addEventListener('click', e => { const b = e.target.closest('[data-judge]'); if (b) judge(b.dataset.pid, b.dataset.judge === '1'); });
+$('#hScores').addEventListener('click', e => {
+  const a = e.target.closest('[data-adj]'), k = e.target.closest('[data-kick]');
+  if (a && G.players[a.dataset.pid]) { G.players[a.dataset.pid].score += +a.dataset.adj; broadcast(); }
+  if (k) { delete G.players[k.dataset.kick]; broadcast(); }
+});
+let resetArm = 0;
+$('#hReset').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (!resetArm) { b.textContent = 'もう一度押すとリセット'; resetArm = setTimeout(() => { resetArm = 0; b.textContent = '得点をリセット'; }, 3000); return; }
+  clearTimeout(resetArm); resetArm = 0; b.textContent = '得点をリセット';
+  for (const p of Object.values(G.players)) p.score = 0;
+  broadcast(); toast('得点をリセットしました');
+});
+$('#trUnplay').addEventListener('click', () => { for (const t of tracks) t.played = false; saveTracks(); renderTracks(); renderHost(); });
+$('#fAdd').addEventListener('submit', e => { e.preventDefault(); if (addUrls($('#inUrl').value)) $('#inUrl').value = ''; });
+$('#inFile').addEventListener('change', e => { addFiles([...e.target.files]); e.target.value = ''; });
+const listPanel = $('#listPanel');
+for (const ev of ['dragenter', 'dragover']) listPanel.addEventListener(ev, e => { if (e.dataTransfer?.types.includes('Files')) { e.preventDefault(); $('#drop').classList.add('over'); } });
+for (const ev of ['dragleave', 'drop']) listPanel.addEventListener(ev, () => $('#drop').classList.remove('over'));
+listPanel.addEventListener('drop', e => { if (e.dataTransfer?.files.length) { e.preventDefault(); addFiles([...e.dataTransfer.files]); } });
+$('#trList').addEventListener('click', e => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) return;
+  const id = b.closest('li').dataset.id;
+  if (b.dataset.act === 'cue') cue(id); else delTrack(id);
+});
+$('#trList').addEventListener('change', e => {
+  const li = e.target.closest('li[data-id]'), t = li && tracks.find(x => x.id === li.dataset.id);
+  if (!t) return;
+  if (e.target.classList.contains('tr-ans')) t.answer = e.target.value.trim().slice(0, 80);
+  if (e.target.classList.contains('tr-start')) { t.start = unclock(e.target.value); e.target.value = clock(t.start); }
+  saveTracks();
+  if (t.id === G.cur) { G.answer = t.answer || '（答え未入力）'; if (G.reveal) broadcast(); else renderHost(); }
+});
+
+// ---------- keys, landing, routing ----------
+addEventListener('keydown', e => {
+  if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || isField(e)) return;
+  const onButton = e.target.closest?.('button, a, summary');
+  if (role === 'play') {
+    if ((e.code === 'Space' && (!onButton || e.target.id === 'buzzer')) || (e.key === 'Enter' && e.target.id === 'buzzer')) { e.preventDefault(); doBuzz(); }
+  } else if (role === 'host') {
+    if (e.code === 'Space' && !onButton) { e.preventDefault(); togglePlay(); }
+    else if (G.mode === 'buzz' && G.answerer && /^[oO]$/.test(e.key)) judge(G.answerer, true);
+    else if (G.mode === 'buzz' && G.answerer && /^[xX]$/.test(e.key)) judge(G.answerer, false);
+  }
+});
+$('#demoBuzz').addEventListener('click', () => playFx({k: 'pin'}, {}));
+$('#btnCreate').addEventListener('click', () => hostStart(false));
+$('#btnResume').addEventListener('click', () => hostStart(true));
+$('#fCode').addEventListener('submit', e => {
+  e.preventDefault();
+  const c = $('#inCode').value.trim().toUpperCase();
+  if (/^[A-Z0-9]{6}$/.test(c)) location.hash = c; else toast('部屋コードは6文字です');
+});
+function route() {
+  const m = location.hash.match(/^#([A-Za-z0-9]{6})$/);
+  if (m) return showJoin(m[1].toUpperCase());
+  role = null; show('vLanding');
+  const saved = store.get('pi.host', null), rb = $('#btnResume');
+  rb.hidden = !saved?.code;
+  if (saved?.code) rb.querySelector('b').textContent = saved.code;
+}
+addEventListener('hashchange', () => { if (!role || role === 'join') route(); });
+if (!window.Peer) toast('通信ライブラリを読み込めませんでした。ページを再読み込みしてください');
+route();
+</script>
+</body>
+</html>
